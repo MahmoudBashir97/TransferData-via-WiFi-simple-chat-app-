@@ -4,12 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.transferdata.R
 import com.example.transferdata.databinding.ActivityClientBinding
-import com.example.transferdata.server.ServerActivity
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.io.PrintWriter
-import java.net.ServerSocket
 import java.net.Socket
 
 class ClientActivity : AppCompatActivity(R.layout.activity_client) {
