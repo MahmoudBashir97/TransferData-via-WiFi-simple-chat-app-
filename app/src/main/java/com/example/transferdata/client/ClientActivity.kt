@@ -3,6 +3,7 @@ package com.example.transferdata.client
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.transferdata.R
+import com.example.transferdata.client.view.MessagesAdapter
 import com.example.transferdata.databinding.ActivityClientBinding
 import java.io.BufferedReader
 import java.io.IOException
@@ -13,14 +14,18 @@ import java.net.Socket
 class ClientActivity : AppCompatActivity(R.layout.activity_client) {
     lateinit var binding:ActivityClientBinding
     private var thread1=Thread()
-     var SOCKET_PORT=0
-     var SOCKET_IP =""
+     var SOCKET_PORT= 0
+     var SOCKET_IP = ""
+    var messagesList:ArrayList<String> = ArrayList()
+    lateinit var mAdapter:MessagesAdapter
     var socket= Socket()
+    var isSent=false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityClientBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initEvents()
+        setupRecyclerview()
     }
     private fun initEvents(){
         binding.btnConnect.setOnClickListener {
@@ -32,6 +37,19 @@ class ClientActivity : AppCompatActivity(R.layout.activity_client) {
             val message = binding.etMessage.text.toString()
             if (message.isNotEmpty())
                 Thread(Thread3(message)).start()
+            if (isSent) {
+                messagesList.add("$message/server")
+                mAdapter.setList(messagesList)
+            }
+        }
+    }
+
+    private fun setupRecyclerview(){
+        messagesList = ArrayList()
+        mAdapter = MessagesAdapter()
+        binding.recMessages.apply {
+            setHasFixedSize(true)
+            adapter= mAdapter
         }
     }
 
@@ -65,17 +83,19 @@ class ClientActivity : AppCompatActivity(R.layout.activity_client) {
                     val message = input.readLine();
                     if (message != null) {
                         runOnUiThread {
-                            binding.tvMessages.append(
-                                "\nserver:$message"
-                            )
+//                            binding.tvMessages.append(
+//                                "\nserver:$message"
+//                            )
+                            messagesList.add(message)
+                            mAdapter.setList(messagesList)
                         }
                     } else {
-                        val Thread1 =  Thread( Thread1());
-                        Thread1.start();
-                        return;
+                        val Thread1 =  Thread( Thread1())
+                        Thread1.start()
+                        return
                     }
                 } catch (e: IOException) {
-                    e.printStackTrace();
+                    e.printStackTrace()
                 }
             }
         }
@@ -88,12 +108,12 @@ class ClientActivity : AppCompatActivity(R.layout.activity_client) {
 
         override fun run() {
             binding.etMessage.setText("")
-            output.println(message)
-
+            output.println("$message/client")
+            isSent = true
             output.flush()
 //            runOnUiThread{
 //                binding.tvMes,sages.append(" client: " + message)
-//                binding.etMessage.setText("");
+//                binding.etMessage.setText("")
 //            }
         }
     }

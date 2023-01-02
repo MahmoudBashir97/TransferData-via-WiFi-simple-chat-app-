@@ -37,8 +37,8 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/etMessage"
         android:layout_below="@+id/tvMessages"
+        tools:listitem="@layout/single_message_item"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
         />
     <EditText
         android:id = "@+id/etMessage"

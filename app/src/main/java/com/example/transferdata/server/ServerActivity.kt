@@ -3,6 +3,7 @@ package com.example.transferdata.server
 import android.net.wifi.WifiManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.example.transferdata.R
 import com.example.transferdata.databinding.ActivityMainBinding
 import com.example.transferdata.server.view.MessagesAdapter
@@ -21,6 +22,7 @@ class ServerActivity : AppCompatActivity(R.layout.activity_main) {
     lateinit var binding: ActivityMainBinding
     lateinit var serverSocket:ServerSocket
     val thread = Thread()
+    var isSent=false
     companion object{
         var SERVER_PORT=8080
         var SERVER_IP=""
@@ -54,7 +56,12 @@ class ServerActivity : AppCompatActivity(R.layout.activity_main) {
         binding.btnSend.setOnClickListener {
             message = binding.etMessage.text.toString()
             if (message.isNotEmpty()){
+                Thread(Thread1()).start()
                 Thread(Thread3(message)).start()
+                if (isSent) {
+                    messagesList.add("$message/server")
+                    mAdapter.setList(messagesList)
+                }
             }
         }
     }
@@ -120,6 +127,7 @@ class ServerActivity : AppCompatActivity(R.layout.activity_main) {
 //                            )
                             messagesList.add(message)
                             mAdapter.setList(messagesList)
+                            Log.d("?????","Mmessage : ${messagesList.size}")
                         }
                     } else {
                         val Thread1 =  Thread( Thread1());
@@ -140,7 +148,8 @@ class ServerActivity : AppCompatActivity(R.layout.activity_main) {
 
         override fun run() {
             binding.etMessage.setText("")
-            output.println(message);
+            output.println("$message/server")
+            isSent=true
             output.flush();
 //            runOnUiThread{
 //                    binding.tvMessages.append("server: " + message)

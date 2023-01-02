@@ -1,4 +1,4 @@
-package com.example.transferdata.server.view
+package com.example.transferdata.client.view
 
 import android.content.Context
 import android.util.Log
@@ -9,18 +9,18 @@ import com.example.transferdata.databinding.SingleMessageItemBinding
 import com.example.transferdata.server.ServerActivity
 
 class MessagesVH(private val binding:SingleMessageItemBinding): RecyclerView.ViewHolder(binding.root) {
-    fun bind(message:String) {
-        setMessageForServerSide(message)
+    fun bind(message:String){
 
+            setMessageForClientSide(message)
     }
 
-    private fun setMessageForServerSide(message:String){
+    private fun setMessageForClientSide(message:String){
 
-        if (message.contains("/server")){
+        if (message.contains("/client")){
             binding.reciverMessage.text = message.split("/")[0]
             binding.reciverMessage.visibility = View.VISIBLE
         }
-        if (message.contains("/client")){
+        if (message.contains("/server")){
             binding.senderMessage.text = message.split("/")[0]
             binding.senderMessage.visibility = View.VISIBLE
         }
